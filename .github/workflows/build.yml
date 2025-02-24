@@ -1,0 +1,30 @@
+name: Build EXE
+
+on: [push]  # 每次 push 代码时触发
+
+jobs:
+  build:
+    runs-on: windows-latest  # 运行在 Windows 环境
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: |
+          pip install pyinstaller
+
+      - name: Build EXE
+        run: |
+          pyinstaller --onefile --noconsole --icon=app.ico chrome_manager.py
+
+      - name: Upload EXE
+        uses: actions/upload-artifact@v3
+        with:
+          name: chrome_manager
+          path: dist/chrome_manager.exe
